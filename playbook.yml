@@ -54,3 +54,11 @@
           REDMINE_DB_USERNAME: redmine
           REDMINE_DB_PASSWORD: redminepassword
           REDMINE_DB_DATABASE: redmine
+    - name: Run Node Exporter
+      docker_container:
+        name: node-exporter
+        image: prom/node-exporter
+        state: started
+        restart_policy: always
+        ports:
+          - "9100:9100"     
