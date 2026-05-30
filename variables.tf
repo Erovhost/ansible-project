@@ -19,5 +19,5 @@ variable "zone" {
 }
 
 variable "image_id" {
-  default = "fd82mpu302omjlftrpsn"
+  default = "fd845dr9j4h2aaq1m6ko"
 }

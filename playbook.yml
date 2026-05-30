@@ -1,0 +1,56 @@
+---
+- name: Setup webservers
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Install Docker dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+        update_cache: yes
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+        update_cache: yes
+
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Run Redmine
+      docker_container:
+        name: redmine
+        image: redmine
+        state: started
+        restart_policy: always
+        ports:
+          - "80:3000"
+        env:
+          REDMINE_DB_POSTGRES: "rc1a-72ishl36vlk52s0u.mdb.yandexcloud.net"
+          REDMINE_DB_PORT: "6432"
+          REDMINE_DB_USERNAME: redmine
+          REDMINE_DB_PASSWORD: redminepassword
+          REDMINE_DB_DATABASE: redmine
